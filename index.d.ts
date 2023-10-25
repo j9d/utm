@@ -1,6 +1,5 @@
 declare module 'utm' {
-    type ZONE_LETTERS =
-        | 'C'
+    type ZONE_LETTERS = 'C'
         | 'D'
         | 'E'
         | 'F'
@@ -21,23 +20,23 @@ declare module 'utm' {
         | 'W'
         | 'X'
 
-    export function toLatLon(
+    export function toLatLong(
         easting: number,
         northing: number,
-        zoneNum: number,
-        zoneLetter?: string | undefined,
-        northern?: boolean | undefined,
+        zoneNumber: number,
+        zoneLetter?: string,
+        northern?: boolean,
         strict?: boolean,
     ): { latitude: number; longitude: number }
 
-    export function fromLatLon(
+    export function fromLatLong(
         latitude: number,
         longitude: number,
-        zoneNum?: ZONE_LETTERS,
+        zoneNumber?: ZONE_LETTERS,
     ): {
         easting: number
         northing: number
-        zoneNum: number
+        zoneNumber: number
         zoneLetter: ZONE_LETTERS
     }
 }

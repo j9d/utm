@@ -11,21 +11,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/timothygu/utm.git"
+    "url": "git+https://github.com/j9d/utm.git"
   },
   "keywords": [
     "utm",
     "latlon"
   ],
-  "author": "Timothy Gu <timothygu99@gmail.com>",
+  "author": "Jamie Dimos <jamiedimos@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/timothygu/utm/issues"
+    "url": "https://github.com/j9d/utm/issues"
   },
-  "homepage": "https://github.com/timothygu/utm#readme",
+  "homepage": "https://github.com/j9d/utm#readme",
   "devDependencies": {
-    "chai": "^4.0.2",
-    "rollup": "^0.43.0",
-    "testit": "^2.1.2"
+    "chai": "^4.3.10",
+    "rollup": "^4.1.4",
+    "testit": "^3.1.0"
   }
 }
