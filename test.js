@@ -1,5 +1,5 @@
 const testit = require('testit');
-const { fromLatLon, toLatLon } = require('.');
+const { fromLatLong, toLatLong } = require('.');
 const { expect } = require('chai');
 
 // Arbitrary
@@ -8,8 +8,8 @@ const DELTA = 3e-5;
 testit('normal conversions', () => {
   for (const [
     name,
-    [lat, lon],
-    [easting, northing, zoneNum, zoneLetter, northern]
+    [lat, long],
+    [easting, northing, zoneNumber, zoneLetter, northern]
   ] of [
     [
       'Aachen, Germany',
@@ -52,32 +52,32 @@ testit('normal conversions', () => {
       [476594, 9328501, 30, 'X', true]
     ]
   ]) {
-    testit(`${name} fromLatLon`, () => {
-      check(fromLatLon(lat, lon));
-      check(fromLatLon(lat, lon, zoneNum));
+    testit(`${name} fromLatLong`, () => {
+      check(fromLatLong(lat, long));
+      check(fromLatLong(lat, long, zoneNumber));
 
       function check(actual) {
         expect(actual.easting).to.be.closeTo(easting, 0.5);
         expect(actual.northing).to.be.closeTo(northing, 0.5);
-        expect(actual.zoneNum).to.equal(zoneNum);
+        expect(actual.zoneNumber).to.equal(zoneNumber);
         expect(actual.zoneLetter).to.equal(zoneLetter.toUpperCase());
       }
     });
 
-    testit(`${name} toLatLon`, () => {
-      check(toLatLon(easting, northing, zoneNum, zoneLetter));
-      check(toLatLon(easting, northing, zoneNum, undefined, northern));
+    testit(`${name} toLatLong`, () => {
+      check(toLatLong(easting, northing, zoneNumber, zoneLetter));
+      check(toLatLong(easting, northing, zoneNumber, undefined, northern));
 
       function check(actual) {
         expect(actual.latitude).to.be.closeTo(lat, DELTA);
-        expect(actual.longitude).to.be.closeTo(lon, DELTA);
+        expect(actual.longitude).to.be.closeTo(long, DELTA);
       }
     });
   }
 });
 
 testit('range check', () => {
-  testit('fromLatLon bad range', () => {
+  testit('fromLatLong bad range', () => {
     for (const args of [
       [-100, 0],
       [-80.1, 0],
@@ -92,20 +92,20 @@ testit('range check', () => {
       [-100, 300],
       [100, 300]
     ]) {
-      expect(() => fromLatLon(...args)).to.throw(RangeError);
+      expect(() => fromLatLong(...args)).to.throw(RangeError);
     }
   });
 
-  testit('fromLatLon good range', () => {
+  testit('fromLatLong good range', () => {
     for (const i of range(-80, 84, 0.01)) {
-      fromLatLon(i, 0);
+      fromLatLong(i, 0);
     }
     for (const i of range(-180, 180, 0.01)) {
-      fromLatLon(0, i);
+      fromLatLong(0, i);
     }
   });
 
-  testit('toLatLon bad range', () => {
+  testit('toLatLong bad range', () => {
     for (const args of [
       // test easting range
       [0, 5000000, 32, 'U'],
@@ -132,24 +132,24 @@ testit('range check', () => {
       [500000, 5000000, 32, 'Y'],
       [500000, 5000000, 32, 'Z']
     ]) {
-      expect(() => toLatLon(...args)).to.throw(RangeError);
+      expect(() => toLatLong(...args)).to.throw(RangeError);
     }
   });
 
-  testit('toLatLon good range', () => {
+  testit('toLatLong good range', () => {
     for (const i of range(100000, 999999, 1000)) {
-      toLatLon(i, 5000000, 32, 'U');
+      toLatLong(i, 5000000, 32, 'U');
     }
     for (const i of range(10, 10000000, 1000)) {
-      toLatLon(500000, i, 32, 'U');
+      toLatLong(500000, i, 32, 'U');
     }
     for (const i of range(1, 60)) {
-      toLatLon(500000, 5000000, i, 'U');
+      toLatLong(500000, 5000000, i, 'U');
     }
     for (const i of range('C'.codePointAt(0), 'X'.codePointAt(0) + 1)) {
       const ch = String.fromCodePoint(i);
       if (ch !== 'I' && ch !== 'O') {
-        toLatLon(500000, 5000000, 32, ch);
+        toLatLong(500000, 5000000, 32, ch);
       }
     }
   });
@@ -157,7 +157,7 @@ testit('range check', () => {
 
 testit('special cases', () => {
   testit('zone 32', () => {
-    for (const [lat, lon, zoneNum, zoneLetter] of [
+    for (const [lat, long, zoneNumber, zoneLetter] of [
       // inside
       [56, 3, 32, 'V'],
       [56, 6, 32, 'V'],
@@ -202,14 +202,14 @@ testit('special cases', () => {
       [64, 11.999999, 32, 'W'],
       [64, 12, 33, 'W']
     ]) {
-      const results = fromLatLon(lat, lon);
-      expect(results.zoneNum).to.equal(zoneNum);
+      const results = fromLatLong(lat, long);
+      expect(results.zoneNumber).to.equal(zoneNumber);
       expect(results.zoneLetter).to.equal(zoneLetter.toUpperCase());
     }
   });
 
   testit('right boundaries', () => {
-    for (const [lat, lon, zoneNum] of [
+    for (const [lat, long, zoneNumber] of [
       [40, 0, 31],
       [40, 5.999999, 31],
       [40, 6, 32],
@@ -220,8 +220,8 @@ testit('special cases', () => {
       [72, 8.999999, 31],
       [72, 9, 33]
     ]) {
-      const results = fromLatLon(lat, lon);
-      expect(results.zoneNum).to.equal(zoneNum);
+      const results = fromLatLong(lat, long);
+      expect(results.zoneNumber).to.equal(zoneNumber);
     }
   });
 });
